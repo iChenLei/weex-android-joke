@@ -1,0 +1,202 @@
+<template>
+    <div class="wrapper">
+        <navbar title="评论"></navbar>
+
+        <div class="joke">
+            <text class="jokec">{{jokecontent}}</text>
+        </div>
+
+        <list>
+            <refresh class="refresh-view" display="{{refresh_display}}" onrefresh="onrefresh">
+                <loading-indicator class="indicator" ></loading-indicator>
+                <text class="refresh-arrow" style="text-align:center;color:rgb(238,162,54)" if="{{refresh_display==='hide'}}">
+                    {{msg}}
+                </text>
+            </refresh>
+            <cell>
+                <scroller>
+                    <com-item repeat={{comments}}></com-item>
+                </scroller>
+            </cell>
+        </list>
+        <div class="input-wrapper">
+            <input type="text" maxlength="15" oninput="oninput" class="input" placeholder="{{hint}}"/>
+            <div class="send-icon" onclick="sendcomment">
+            <text style="color:#FFFFFF">发送</text>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    require('weex-components');
+    var stream = require('@weex-module/stream');
+    var modal = require('@weex-module/modal');
+    var storage = require('@weex-module/storage');
+    module.exports = {
+        data:{
+            comments:[],
+            refresh_display:'hide',
+            msg:'下拉刷新',
+            jokeid:'',
+            jokecontent:'',
+            jokehttp:'',
+            hint:'请输入评论',
+            mycomment:''
+        },
+        methods:{
+             onrefresh:function(e){
+                var self = this;
+                self.msg = '下拉刷新';
+                self.refresh_display = 'show';
+                this.$call('timer','setTimeout',function(){
+                   self.refresh_display = 'hide';
+                },2000);
+                self.refresh();
+            },
+            oninput:function(e){
+                var self = this;
+                this.mycomment = e.value;
+            },
+            sendcomment:function(){
+                var self = this;
+                var com = self.mycomment;
+                var commsg = '{"jokeid":"'+self.jokeid+'","comment":"'+com+'"}';
+                stream.fetch({
+                    method:'POST', 
+                    url:self.jokehttp, 
+                    headers:{ 
+                           'X-LC-Id':'zksrg6fpR18GjAsv0eHPs4Kz-gzGzoHsz', 
+                           'X-LC-Key':' XfkYkvCvsJ1FkhEqzdTsMnNC', 
+                           'Content-Type':'application/json' 
+                      },
+                    body:commsg
+                },function(ret){
+                        if(!ret.ok){
+                            modal.toast({'message':'由于网络问题，评论失败','duration':2});
+                        }else{
+                            modal.toast({'message':'评论成功','duration':2});
+                            `self.refresh();
+                        }
+                });
+            },
+            refresh:function(){
+                    var self = this;
+                    var url = 'https://leancloud.cn:443/1.1/classes/jokecomment?where={"jokeid":"'+self.jokeid+'"}&limit=20&&order=-createdAt&&';
+                    encodeURI(url);
+                    stream.fetch({
+                            method:'GET',
+                            url:url,
+                            headers:{
+                                'X-LC-Id':'zksrg6fpR18GjAsv0eHPs4Kz-gzGzoHsz', 
+                                'X-LC-Key':'XfkYkvCvsJ1FkhEqzdTsMnNC',
+                                'content-type':'application/json'
+                            },
+                    },function(ret){
+                            if(!ret.ok){
+                                modal.toast({'message':'你的手机网络出问题啦!','duration':2});
+                            }else{
+                                self.comments.splice(0,self.comments.length);
+                                var json = JSON.parse(ret.data);
+                                for(var i = 0;i<json.results.length;i++){
+                                    self.comments.push(json.results[i]);
+                                }
+                            }
+                    });
+               }
+
+        },
+        created:function(){
+            var self = this;
+            var jokehttp = '';
+            storage.getItem('content',function(e){
+                if(e.data){
+                    self.jokecontent = e.data;
+                }else{
+                    modal.toast({'message':'error!','duration':1});
+                }
+            });
+            storage.getItem('id',function(e){
+                if(e.data){
+                    self.jokeid = e.data;
+                    self.jokehttp ='https://leancloud.cn:443/1.1/classes/jokecomment?where={"jokeid":"'+self.jokeid+'"}&limit=20&&order=-createdAt&&';
+                    encodeURI(self.jokehttp);
+                    stream.fetch({ 
+                            method:'GET', 
+                            url:self.jokehttp, 
+                            headers:{ 
+                                'X-LC-Id':'zksrg6fpR18GjAsv0eHPs4Kz-gzGzoHsz', 
+                                'X-LC-Key':' XfkYkvCvsJ1FkhEqzdTsMnNC', 
+                                'Content-Type':'application/json' 
+                            } },
+                         function(ret){ 
+                                    if(!ret.ok){ 
+                                    modal.toast({'message':'网络错误','duration':2}); 
+                                   }else{ 
+                                    var json = JSON.parse(ret.data); 
+                                    for(var i = 0; i < json.results.length;i++){
+                                            self.comments.push(json.results[i]);
+                                        }
+                             } },
+                             function(res){  }
+                        );
+                }else{
+
+                }
+            });
+        }
+    }
+
+</script>
+
+
+<style>
+    .input-wrapper{
+        position:fixed;
+        bottom:50;
+        margin-bottom:30;
+        flex-direction:row;
+    }
+
+    .send-icon{
+        height:100;
+        width:100;
+        border-radius:5;
+        background-color:#73D0F4;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .input{
+        height:100;
+        width:650;
+        margin-bottom:5;
+        border-width:5;
+        border-radius:5;
+        border-color:#73D0F4;
+    }
+
+    .jokec{
+        text-overflow:ellipsis;
+    }
+
+    .joke{
+        margin:20;
+        max-height:200;
+        text-overflow:ellipsis;
+    }
+
+    .indicator{
+        width:60;
+        height:60;
+        color:#889967;
+    }
+
+    .refresh-view{
+        height:100;
+        width:750;
+        align-items:center;
+    }
+
+
+</style>

@@ -1,0 +1,124 @@
+<template>
+    <div class="wrapper">
+        <web class="web" id="webview" onpagestart="startload" onpagefinish="finishload"
+             src="http://{{url}}"></web>
+        <div class="toolbar">
+            <div class="common back">
+                <text class="text back" onclick="back">⇦</text>
+            </div>
+            <div class="common refresh">
+                <text class="text refresh" onclick="refresh">↻</text>
+            </div>
+            <div class="common go">
+                <text class="text go" onclick="go">⇨</text>
+            </div>
+        </div>
+
+        <infobar show="{{show}}" where="{{where}}"></infobar>
+    </div>
+</template>
+
+<script>
+
+        require('weex-components');
+        var modal = require('@weex-module/modal');
+        var dom = require("@weex-module/dom");
+        module.exports = {
+
+            data:{
+                url:'m.baidu.com',
+                show:true,
+                where:'来福岛'
+            },
+
+            created:function(){
+                var self = this;
+                this.url = "m.laifudao.com";
+                setTimeout(function(){self.show = false},2000);
+            },
+
+            methods: {
+                back: function() {
+                    var $webview = require('@weex-module/webview');
+                    var webElement = this.$el('webview');
+                    $webview.goBack(webElement.ref);
+                 },
+                go: function() {
+                    var $webview = require('@weex-module/webview');
+                    var webElement = this.$el('webview');
+                    $webview.goForward(webElement.ref);
+                },
+                refresh: function() {
+                    var $webview = require('@weex-module/webview');
+                    var webElement = this.$el('webview');
+                    $webview.reload(webElement.ref);
+                },
+                startload: function(e) {
+
+                },
+                finishload: function(e) {
+
+                },
+                failload: function(e) {
+
+                }
+            }
+        }
+
+</script>
+
+<style>
+
+    .wrapper{
+    width:750;
+    position:absolute;
+    top:0;
+    right:0;
+    left:0;
+    bottom:0;
+    }
+
+    .web{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-top: 0;
+    margin-bottom: 180;
+    }
+
+    .toolbar{
+    flex-direction:row;
+    position:fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 180;
+    width:750;
+    background-color:#FFFFFF;
+    }
+
+    .common{
+    flex:1;
+    justify-content:center;
+    align-items:center;
+    flex-direction:row;
+    height:180;
+    }
+
+    .text{
+    color:#000000;
+    }
+
+    .go,.back,{
+    font-size:80;
+    margin-bottom:50;
+    }
+
+    .refresh{
+    font-size:60;
+    margin-bottom:40;
+    }
+
+</style>

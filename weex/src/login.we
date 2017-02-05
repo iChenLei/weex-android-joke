@@ -1,0 +1,177 @@
+<template>
+
+    <div class="wrapper">
+
+        <div class="nav_bar">
+            <div style="flex:1;"></div>
+            <div class="nav_text">
+                <text style="color:#FFFFFF;">{{title}}</text>
+            </div>
+            <div style="flex:1;"></div>
+        </div>
+        <div class="nav_line"></div>
+
+        <div class="form">
+            <div class="username f-common">
+                <text class="text_user txt">用户名：</text>
+                <input type="text" maxlength="12" oninput="onchange" class="input"/>
+            </div>
+            <div class="password f-common">
+                <text class="text_pass txt">密码：</text>
+                <input type="password" maxlength="20" oninput="onchange1" class="input"/>
+            </div>
+        </div>
+
+        <div class="action">
+            <div class="signin ac-common" onclick="showsp">
+                <text class="text">注册</text>
+            </div>
+            <div class="login ac-common" onclick="setsp">
+                <text class="text">登录</text>
+            </div>
+        </div>
+        <div class="hintwrapper" if="{{show}}">
+            <text class="hint">{{hint}}</text>
+        </div>
+    </div>
+
+</template>
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+
+    module.exports = {
+
+            data:{
+                username:'',
+                password:'',
+                title:'登录',
+                show:true,
+                hint:'',
+                hint_a:'测试账号 暴走漫画 123456',
+                hint_b:'让你输入测试账号，你干啥呢？',
+                hint_c:'注册功能尚未开放'
+            },
+
+            created:function(){
+                var self =this;
+                self.hint = self.hint_a;
+            },
+
+            methods:{
+                onchange:function(event){
+                    this.username = event.value;
+                    this.hint = this.hint_a;
+                },
+                onchange1:function(event){
+                    this.password = event.value;
+                     this.hint = this.hint_a;
+                },
+                setsp:function(){
+
+                    var self = this;
+                    var u = self.username;
+                    var p = self.password;
+                    if(u == '暴走漫画' && p == '123456'){
+                    require('@weex-module/myModule').sp(u,p)
+                    }else{
+                        self.hint = self.hint_b;
+                    }
+                },
+                showsp:function(){
+                    var self = this;
+                    self.hint = self.hint_c;
+                }
+            }
+
+    }
+
+</script>
+
+
+<style>
+
+    .hint{
+        font-size:28;
+        color: #8a6d3b;
+    }
+
+    .hintwrapper{
+        width:750;
+        height:100;
+        margin-top:30;
+        justify-content:center;
+        background-color: #fcf8e3;
+        border-color: #faebcc;
+        align-items:center;
+        padding-left: 36;
+        padding-right: 36;
+        padding-top: 36;
+        padding-bottom: 36;
+        border-radius: 10;
+    }
+
+    .txt{
+        margin-bottom:10;
+    }
+
+    .form{
+        margin:30;
+        height:360;
+        flex-direction:cloumn;
+    }
+
+    .f-common{
+        margin-bottom:20;
+    }
+
+    .input{
+        height:100;
+        border-width:5;
+        border-radius:5;
+        border-color:#73D0F4;
+
+    }
+
+    .action{
+        flex-direction:row;
+    }
+
+    .text{
+        color:#ffffff;
+    }
+
+    .ac-common{
+        height:100;
+        flex:1;
+        justify-content:center;
+        align-items:center;
+        background-color:#73D0F4;
+        border-radius:10;
+        padding-top:10;
+        padding-bottom:10;
+        margin-left:30;
+        margin-right:30;
+    }
+
+    .nav_bar{
+        flex-direction:row;
+        height:100;
+        background-color:#73D0F4;
+    }
+
+    .nav_text{
+        flex:1
+        font-size:40;
+        font-weight:bold;
+        justify-content:center;
+        align-items:center;
+    }
+
+    .nav_line{
+        height:1px;
+        background-color:#D8D8D8;
+    }
+
+</style>

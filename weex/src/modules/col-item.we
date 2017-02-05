@@ -1,0 +1,67 @@
+<template>
+    <div>
+        <div class="col-wrapper" obj="{{objectid}}" onlongpress="longpress">
+            <text class="col-content">{{content}}</text>
+            <image class="col-flag" src="http://p1.bpimg.com/1949/09b2df5158924ba4.png"
+                    style="position:absolute;bottom:10px;right:40px;width:44;height:44;"></image>
+        </div>
+    </div>
+</template>
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+    var stream = require('@weex-module/stream');
+    module.exports = {
+            data:{
+                content:'',
+                objectid:''
+            },
+
+            methods:{
+
+
+                longpress:function(e){
+                    var self = this;
+                    var id = e.target.attr.obj;
+
+                    var url = 'https://leancloud.cn:443/1.1/classes/collection/'+id;
+
+                    stream.fetch({
+
+                         method:'DELETE',
+                         url:url,
+                         headers:{
+                            'X-LC-Id':'zksrg6fpR18GjAsv0eHPs4Kz-gzGzoHsz', 
+                            'X-LC-Key':'XfkYkvCvsJ1FkhEqzdTsMnNC',
+                            'content-type':'application/json'
+                         }
+
+                    },function(ret){
+                            if(!ret.ok){
+                                modal.toast({'message':'删除失败','duration':1});
+                            }else{
+                                modal.toast({'message':'删除成功，刷新试试','duration':1});
+                            }
+                    });
+
+                }
+
+            }
+    }
+
+</script>
+
+<style>
+    .col-content{
+
+    }
+
+    .col-wrapper{
+        width:750;
+        padding:20;
+        border-top-width:20;
+        border-top-color:#EDEDED;
+    }
+</style>
+

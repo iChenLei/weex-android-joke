@@ -1,0 +1,119 @@
+<template>
+    <div class="tab-question">
+        <navbar title="笑话部落格"></navbar>
+        <list>
+             <refresh class="refresh-view" display="{{refresh_display}}" onrefresh="onrefresh">
+                 <loading-indicator class="indicator" ></loading-indicator>
+                 <text class="refresh-arrow" style="text-align:center;color:rgb(238,162,54)" if="{{refresh_display==='hide'}}">
+                     {{msg}}
+                 </text>
+             </refresh>
+            <cell>
+                <scroller>
+                    <joke_item repeat={{jokeArray}}></joke_item>
+                </scroller>
+                <div class="line"></div>
+            </cell>
+        </list>
+
+    </div>
+</template>
+
+<script>
+    require('weex-components');
+    var stream = require('@weex-module/stream');
+    var modal = require('@weex-module/modal');
+    module.exports = {
+
+     data:{
+            refresh_display:'hide',
+            jokeArray:[],
+            test:'s-test',
+            msg:'下拉刷新'
+         },
+
+        methods:{
+            onrefresh:function(e){
+                var self = this;
+                self.msg = '下拉刷新';
+                self.refresh_display = 'show';
+                this.$call('timer','setTimeout',function(){
+                   self.refresh_display = 'hide';
+                },2000);
+                self.refresh();
+            },
+
+            refresh:function(){
+                    var self = this;
+                    var url = 'https://api.leancloud.cn/1.1/classes/joke?limit=20&&order=-createdAt&&';
+                    stream.fetch({
+                            method:'GET',
+                            url:url,
+                            headers:{
+                                'X-LC-Id':'zksrg6fpR18GjAsv0eHPs4Kz-gzGzoHsz', 
+                                'X-LC-Key':'XfkYkvCvsJ1FkhEqzdTsMnNC',
+                                'content-type':'application/json'
+                            },
+                    },function(ret){
+                            if(!ret.ok){
+                                modal.toast({'message':'你的手机网络出问题啦!','duration':2});
+                            }else{
+                                self.jokeArray.splice(0,self.jokeArray.length);
+                                var json = JSON.parse(ret.data);
+                                for(var i = 0;i<json.results.length;i++){
+                                    self.jokeArray.push(json.results[i]);
+                                }
+                            }
+                    });
+               }
+
+          },
+         created: function(){
+               var self = this;
+                stream.fetch({ 
+                            method:'GET', 
+                            url:'https://api.leancloud.cn/1.1/classes/joke?limit=10&&order=-createdAt&&', 
+                            headers:{ 
+                                'X-LC-Id':'zksrg6fpR18GjAsv0eHPs4Kz-gzGzoHsz', 
+                                'X-LC-Key':' XfkYkvCvsJ1FkhEqzdTsMnNC', 
+                                'Content-Type':'application/json' 
+                            } },
+                         function(ret){ 
+                                    if(!ret.ok){ 
+                                    modal.toast({"message":"Network Error!",'duration':2}); 
+                                   }else{ 
+                                        var json = JSON.parse(ret.data); 
+                                        for(var i = 0; i < json.results.length;i++){
+                                            self.jokeArray.push(json.results[i]);
+                                        }
+                             } },
+                             function(res){  }
+                  );
+        }
+    }
+</script>
+
+<style>
+    .indicator{
+        width:60;
+        height:60;
+        color:#889967;
+    }
+
+    .refresh-view{
+        height:100;
+        width:750;
+        align-items:center;
+    }
+
+    .line{
+        width:750;
+        height:20;
+        background-color:#EDEDED;
+    }
+
+    .tab-question{
+        margin-bottom:150;
+    }
+
+</style>

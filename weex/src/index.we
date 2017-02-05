@@ -1,0 +1,51 @@
+<template>
+    <div style="flex-direction: column;">
+        <wxc-tabbar tab-items={{tabItems}}></wxc-tabbar>
+    </div>
+</template>
+
+<script>
+    require('weex-components');
+
+    module.exports = {
+        data:{
+            tabItems:[
+                {
+                    index:0,
+                    title:"主页",
+                    titleColor:'',
+                    icon:"",
+                    image:"http://ww2.sinaimg.cn/large/0060lm7Tgw1fb5paqsppfj302v02gmwx.jpg",
+                    selectedImage:"http://ww3.sinaimg.cn/large/0060lm7Tgw1fb5pacghqhj302v02g744.jpg",
+                    src:"file://assets/weex/modules/main.js",
+                    visibility:"visible"
+                },
+                {
+                    index:1,
+                    title:"收藏",
+                    titleColor:'',
+                    icon:"",
+                    image:"http://ww2.sinaimg.cn/large/0060lm7Tgw1fb5oxe9vbkj302s02g0si.jpg",
+                    selectedImage:"http://ww4.sinaimg.cn/large/0060lm7Tgw1fb5ow9ddswj302s02gglh.jpg",
+                    src:"file://assets/weex/modules/collection.js",
+                    visibility:"hidden"
+                },
+                {
+                    index:2,
+                    title:"我的",
+                    titleColor:'',
+                    icon:"",
+                    image:"http://ww1.sinaimg.cn/large/0060lm7Tgw1fb5pbtauy1j302c02hmwx.jpg",
+                    selectedImage:"http://ww4.sinaimg.cn/large/0060lm7Tgw1fb5pbb390dj302c02hglg.jpg",
+                    src:"file://assets/weex/modules/me.js",
+                    visibility:"hidden"
+                }
+
+            ]
+        }
+    }
+</script>
+
+<style>
+
+</style>

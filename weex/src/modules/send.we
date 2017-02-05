@@ -1,0 +1,249 @@
+<template>
+    <div>
+        <navbar title="写笑话"></navbar>
+        <div class="wrapper">
+            <div class="joke-edit">
+                <myinput oninput="oninput" class="joke-textarea" id="joke" rows="14" autofocus="false" maxlength="140" placeholder="来写个笑话吧,最多140字哟。。。"></myinput>
+                <div class="show-length">
+                    <text>{{length}}/140</text>
+                </div>
+            </div>
+            <div class="joke-action">
+                <div class="edit-cancel common" onclick="backtohome">
+                    <text class="text-cancel">取消</text>
+                </div>
+
+                <div class="common edit-clear" onclick="upload">
+                    <text class="text-clear">{{uploadhint}}</text>
+                </div>
+
+                <div class="edit-send common" onclick="sendjoke" info="test">
+                    <text class="text-send">发送</text>
+                </div>
+            </div>
+            <div class="error_hint" if="{{showerror}}">
+                    <text class="hint">{{hint}}</text>
+            </div>
+            <div class="success_hint" if="{{showsuccess}}">
+                    <text class="success">{{success}}</text>
+            </div>
+            <div class="wr">
+            <div class="imagewrapper" if="{{showimage}}">
+                <image class="myimage" style="width:200;height:200" src="{{url}}" resize="cover"></image>
+            </div>
+             <div class="delete" onclick="delimg">
+                <text style="opacity:0.5;font-size:60" if="{{showdelete}}">X</text>
+             </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+    var stream = require('@weex-module/stream');
+    module.exports = {
+        data:{
+
+            length:0,
+            success:'你的笑话已经成功打入服务器内部!',
+            value:'',
+            hint:'',
+            showerror:false,
+            showsuccess:false,
+            url:'',
+            showimage:false,
+            uploadhint:'上传图片',
+            showdelete:false
+        },
+
+        methods:{
+
+            delimg:function(){
+                var self = this;
+                self.url = "";
+                self.showimage = false;
+                self.showdelete = false;
+            },
+
+            backtohome:function(e){
+                require('@weex-module/myModule').backtohome('back');
+            },
+
+            upload:function(){
+                require('@weex-module/myModule').uploadimage();
+            },
+
+            sendjoke:function(e){
+
+                var self = this;
+                var url = 'https://leancloud.cn:443/1.1/classes/joke';
+                var minlength = 12;
+
+                var msgH = '{"jokecontent":"'
+                var msgF = '","up":0,"down":0,"id":3,"username":"暴走漫画","reply":0,"url":"'+self.url+'"}';
+                var msg = msgH+self.value+msgF;
+                if(self.value.length <= 12){
+                    self.hint = '几个字的笑话，可能吗？';
+                    self.showerror = true;
+                    return;
+                }
+
+                stream.fetch({
+                    method:'POST',
+                    url:url,
+                    headers:{
+                          'X-LC-Id':'zksrg6fpR18GjAsv0eHPs4Kz-gzGzoHsz', 
+                          'X-LC-Key':'XfkYkvCvsJ1FkhEqzdTsMnNC',
+                          'content-type':'application/json'
+                    },
+                    body:msg
+                },function(ret){
+                      if(!ret.ok){
+                        self.hint='貌似服务器炸了，555';
+                        self.showerror = true;
+                        self.showsuccess = false;
+                      } else{
+                        self.showerror = false;
+                        self.showsuccess = true;
+                        self.showimage = false;
+                        self.uploadhint = '上传图片';
+                        self.showdelete = false;
+                      }
+                });
+
+            },
+            oninput:function(e){
+                var self = this;
+                this.value = e.value;
+                self.length = e.value.length;
+                if(self.value.length == 0){
+                    self.showerror = false;
+                    self.showsuccess = false;
+                }
+            }
+
+        }
+    }
+
+</script>
+
+<style>
+
+    .delete{
+        justify-content:center;
+        align-items:center;
+        margin:20;
+    }
+
+    .imagewrapper{
+        margin:20;
+        width:220;
+        height:220;
+        justify-content:center;
+        align-items:center;
+        border-radius:10;
+        border-color:#D8D8D8;
+        border-width:10;
+    }
+
+    .wr{
+        flex-direction:row;
+    }
+
+    .show-length{
+        position:absolute;
+        right:20;
+        bottom:10;
+    }
+
+    .success_hint{
+        width:750;
+        height:100;
+        margin-top:10;
+        justify-content:center;
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+        align-items:center;
+        padding-left: 36px;
+        padding-right: 36px;
+        padding-top: 36px;
+        padding-bottom: 36px;
+        border-radius: 10px;
+    }
+
+    .success{
+        font-size:28;
+        color: #3c763d;
+    }
+
+    .error_hint{
+        width:750;
+        height:100;
+        margin-top:10;
+        justify-content:center;
+        background-color: #fcf8e3;
+        border-color: #faebcc;
+        align-items:center;
+        padding-left: 36px;
+        padding-right: 36px;
+        padding-top: 36px;
+        padding-bottom: 36px;
+        border-radius: 10px;
+    }
+
+    .hint{
+        font-size:28;
+        color: #8a6d3b;
+    }
+
+    .wrapper{
+        flex-direction:column;
+        margin:20;
+    }
+
+    .joke-textarea{
+        height:500;
+    }
+
+    .joke-edit{
+        border-radius:10;
+        border-width:5;
+        border-color:#73D0F4;
+    }
+
+    .joke-action{
+        flex-direction:row;
+        margin-top:30;
+    }
+
+    .common{
+        margin:10;
+        flex:1;
+        justify-content:center;
+        align-items:center;
+        flex-direction:row;
+        border-radius:10;
+        padding-top:10;
+        padding-bottom:10;
+    }
+
+    .edit-cancel{
+        background-color:#D0021B;
+    }
+
+    .edit-send{
+        background-color:#73D0F4;
+    }
+
+    .edit-clear{
+        background-color:#3c763d;
+    }
+
+    .text-send,.text-cancel,.text-clear{
+        font-size:44;
+        color:#FFFFFF;
+    }
+
+</style>

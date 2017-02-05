@@ -1,0 +1,105 @@
+<template>
+    <div>
+    <navbar title="收藏"></navbar>
+        <list>
+            <refresh class="refresh-view" display="{{refresh_display}}" onrefresh="onrefresh">
+                <loading-indicator class="indicator" ></loading-indicator>
+                <text class="refresh-arrow" style="text-align:center;color:rgb(238,162,54)" if="{{refresh_display==='hide'}}">
+                    下拉刷新
+                </text>
+            </refresh>
+            <cell>
+                <scroller>
+                      <div repeat="{{colArray}}">
+                          <col-item content="{{content}}" objectid="{{objectId}}"></col-item>
+                      </div>
+                </scroller>
+            </cell>
+        </list>
+    </div>
+</template>
+
+<script>
+
+    require('weex-components');
+    var stream = require('@weex-module/stream');
+    var modal = require('@weex-module/modal');
+    module.exports = {
+            data:{
+                refresh_display:'hide',
+                colArray:[]
+            },
+            methods:{
+                onrefresh:function(e){
+                    var self = this;
+                    self.refresh_display = 'show';
+                    this.$call('timer','setTimeout',function(){
+                       self.refresh_display = 'hide';
+                    },2000);
+
+                    self.refresh();
+                },
+                refresh:function(){
+                    var self = this;
+                    var url = 'https://leancloud.cn:443/1.1/classes/collection?limit=20&&order=-createdAt';
+                    stream.fetch({
+                            method:'GET',
+                            url:url,
+                            headers:{
+                                'X-LC-Id':'zksrg6fpR18GjAsv0eHPs4Kz-gzGzoHsz', 
+                                'X-LC-Key':'XfkYkvCvsJ1FkhEqzdTsMnNC',
+                                'content-type':'application/json'
+                            },
+                    },function(ret){
+                            if(!ret.ok){
+                                modal.toast({'message':'这个可不怪我，是你的网络问题!','duration':2});
+                            }else{
+                                self.colArray.splice(0,self.colArray.length);
+                                var json = JSON.parse(ret.data);
+                                for(var i = 0;i<json.results.length;i++){
+                                    self.colArray.push(json.results[i]);
+                                }
+                            }
+                    });
+                }
+            },
+            created:function(){
+                    var self = this;
+                    var url = 'https://leancloud.cn:443/1.1/classes/collection?limit=20&&order=-createdAt';
+                    stream.fetch({
+                            method:'GET',
+                            url:url,
+                            headers:{
+                                'X-LC-Id':'zksrg6fpR18GjAsv0eHPs4Kz-gzGzoHsz', 
+                                'X-LC-Key':'XfkYkvCvsJ1FkhEqzdTsMnNC',
+                                'content-type':'application/json'
+                            }
+                    },function(ret){
+                            if(!ret.ok){
+                                modal.toast({'message':'Network Error!','duration':2});
+                            }else{
+                                var json = JSON.parse(ret.data);
+                                for(var i = 0;i<json.results.length;i++){
+                                    self.colArray.push(json.results[i]);
+                                }
+                                modal.toast({'message':a,'duration':2});
+                            }
+                    });
+            }
+    }
+
+</script>
+
+<style>
+    .refresh-view{
+        height:100;
+        width:750;
+        align-items:center;
+    }
+
+    .indicator{
+        width:60;
+        height:60;
+        color:#889967;
+    }
+</style>

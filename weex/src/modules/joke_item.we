@@ -1,0 +1,229 @@
+<template>
+    <div>
+        <div class="joke-wrapper" onlongpress="longpress" obj="{{objectId}}">
+        <div class="joke-title">
+            <div class="user-avatar"></div>
+            <div class="user-info">
+                <text class="user-name-text">{{username}}</text>
+                <text class="user-time" style="opacity:0.4;font-size:25">{{createdAt}}</text>
+            </div>
+        </div>
+        <div class="joke-content">
+            <text class="joke-content-text" style="font-size:30">{{jokecontent}}</text>
+        </div>
+        <div class="joke-image" if="{{showimg}}">
+            <image class="j-image" style="width:300;height:400" resize="cover" src="{{url}}"></image>
+        </div>
+        <div class="joke-bottom" >
+            <div class="joke-love" onclick="upAction" obj="{{objectId}}">
+                <image class="img" src="http://i1.piimg.com/567571/4d57ec77fa2c27b0.png"></image>
+                <text class="txt">{{up}}</text>
+            </div>
+            <div class="joke-reply" onclick="gotoreply" obj="{{objectId}}">
+                <image class="img" src="http://i1.piimg.com/567571/c046122d57e5da9e.png"></image>
+            </div>
+            <div class="joke-like" onclick="downAction" obj="{{objectId}}">
+                <image class="img" src="http://ww3.sinaimg.cn/large/0060lm7Tgw1fb5ogq3cv3j300q00n0f2.jpg"></image>
+                <text class="txt">{{down}}</text>
+            </div>
+
+            <div class="joke-share" onclick="share" obj="{{objectId}}">
+                <image class="img" src="http://ww1.sinaimg.cn/large/0060lm7Tgw1fbbe3xef2oj303h02owec.jpg"></image>
+            </div>
+
+        </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+    var stream = require('@weex-module/stream');
+    var storage = require('@weex-module/storage');
+    module.exports = {
+
+        created:function(){
+            var self = this;
+            if(self.url != ""){
+                self.showimg = true;
+            }
+        },
+
+        data:{
+            username:'',
+            creatAt:'',
+            jokecontent:'',
+            up:'',
+            reply:'',
+            down:'',
+            objectId:'',
+            url:'',
+            showimg:false
+        },
+
+        methods:{
+            clipbo:function(){
+                var self = this;
+                var content = self.jokecontent;
+                require('@weex-module/clipboard').setString(content);
+                modal.toast({'message':'已复制笑话到剪贴板!','duration':1});
+            },
+            share:function(){
+                var self = this;
+                var content = self.jokecontent;
+                require('@weex-module/myModule').share(content);
+            },
+            gotoreply:function(e){
+                var self = this;
+                var id = e.target.attr.obj;
+                var content = self.jokecontent;
+                storage.setItem('id',id,function(e){
+                    if(e.data == 'undefined'){
+                    }else{
+                        modal.toast({'message':'Fail..','duration':2});
+                    }
+                });
+
+                storage.setItem('content',content,function(e){
+                    if(e.data == 'undefined'){
+                    }else{
+                        modal.toast({'message':'Fail..','duration':2});
+                    }
+
+                });
+
+                require('@weex-module/myModule').comment(id,content);
+
+            },
+            upAction:function(e){
+                var self = this;
+                self.up++;
+                var id = e.target.attr.obj;
+                self.http('up',self.up,id);
+            },
+            downAction:function(e){
+                var self = this;
+                self.down++;
+                var id = e.target.attr.obj;
+                self.http('down',self.down,id);
+            },
+            longpress:function(e){
+                var self = this;
+                var joke = self.jokecontent;
+                var url = 'https://leancloud.cn:443/1.1/classes/collection';
+                var col = '{"id":3,"content":"'+joke+'"}';
+                stream.fetch({
+                     method:'POST',
+                     url:url,
+                     headers:{
+                        'X-LC-Id':'zksrg6fpR18GjAsv0eHPs4Kz-gzGzoHsz', 
+                        'X-LC-Key':'XfkYkvCvsJ1FkhEqzdTsMnNC',
+                        'content-type':'application/json'
+                     },
+                     body:col
+                },function(ret){
+                     if(!ret.ok){
+                            modal.toast({'message':'你的手机网络出问题啦!','duration':2});
+                       }else{
+                            modal.toast({'message':'收藏成功','duration':1});
+                       }
+                });
+            },
+            http:function(action,number,id){
+
+                var baseUrl = 'https://leancloud.cn:443/1.1/classes/joke/';
+                var url = baseUrl+id;
+                var change = '';
+
+                if(action == 'up' || action == 'down' ){
+                   change = '{"' + action + '":' + number + '}';
+                }
+
+
+                stream.fetch({
+                     method:'PUT',
+                     url:url,
+                     headers:{
+                        'X-LC-Id':'zksrg6fpR18GjAsv0eHPs4Kz-gzGzoHsz', 
+                        'X-LC-Key':'XfkYkvCvsJ1FkhEqzdTsMnNC',
+                        'content-type':'application/json'
+                     },
+                     body:change
+                },function(ret){
+                       if(!ret.ok){
+                            modal.toast({'message':'网络出错，操作失败!','duration':1});
+                       }
+                });
+
+
+            }
+        }
+
+    }
+</script>
+
+<style>
+
+    .joke-image{
+
+        margin-left:20;
+        margin-top:10;
+
+    }
+
+    .joke-wrapper{
+        flex-direction:column;
+        border-top-width:20;
+        border-top-color:#EDEDED;
+    }
+
+    .joke-title{
+        align-items:center;
+        height:120;
+        flex-direction:row;
+    }
+
+    .joke-content{
+
+    }
+
+    .joke-bottom{
+        margin-top:15;
+        margin-bottom:15;
+        flex-direction:row;
+    }
+
+    .joke-content,.joke-title,.joke-bottom{
+        margin-left:20;
+        margin-right:20;
+    }
+
+    .joke-love,.joke-reply,.joke-like,.joke-share{
+        flex:1;
+        justify-content:center;
+        align-items:center;
+        flex-direction:row;
+    }
+
+    .user-avatar{
+        width:80;
+        height:80;
+        border-radius:40;
+        background-color:#7ACC20;
+    }
+
+    .user-info{
+        margin-left:10;
+    }
+
+    .img{
+        width:40;
+        height:40;
+    }
+
+    .txt{
+        opacity:0.3;
+        font-size:30;
+    }
+</style>

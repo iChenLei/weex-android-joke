@@ -1,0 +1,37 @@
+<template>
+
+    <div class="info" if="{{show}}">
+        <text class="text-info">正在前往{{where}}</text>
+    </div>
+
+</template>
+
+<script>
+
+    require('weex-components');
+
+    module.exports = {
+
+        data:{
+            where:'杏花村',
+            show:true
+        }
+
+    }
+
+</script>
+
+<style>
+
+    .info{
+        width:750;
+        position:fixed;
+        height:300;
+        top:500;
+        justify-content:center;
+        align-items:center;
+    }
+
+
+
+</style>

@@ -1,0 +1,33 @@
+<template>
+    <div>
+        <div class="nav-button" onclick="click">
+            <text>LeanCloud</text>
+        </div>
+    </div>
+</template>
+
+<script>
+    require('weex-components');
+    var modal = require('@weex-module/modal');
+    var stream = require('@weex-module/stream');
+
+    module.exports = {
+            data:{
+                joke:[],
+                jokecomment:[]
+            },
+            methods:{
+                click:function(e){
+
+                }
+            }
+    }
+
+</script>
+
+
+<style>
+
+
+
+</style>
