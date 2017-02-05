@@ -43,8 +43,8 @@ public class ImageAdapter implements IWXImgLoaderAdapter
 	 └──README.md  //readme
 ```
 使用git下载项目代码，会得到项目源码和安卓apk。
-```git 
-	clone https://github.com/iChenLei/weex-android-joke.git
+```bash
+	git clone https://github.com/iChenLei/weex-android-joke.git
 ```
 ### License
 [MIT](http://opensource.org/licenses/MIT)
