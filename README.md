@@ -3,6 +3,7 @@
 ###阿里巴巴weex校园开发大赛作品
 ![](http://p1.bpimg.com/567571/033072ded53b7f0e.png)
 >该图片来自比赛答辩PPT的展示页
+
 ###weex开发流程
 1.打开Android Studio，初始化一个项目
 2.配置好gradle，安装好weex-sdk(我用的是v0.8.0版本)
@@ -42,7 +43,8 @@ public class ImageAdapter implements IWXImgLoaderAdapter
 	 └──README.md  //readme
 ```
 使用git下载项目代码，会得到项目源码和安卓apk。
-```git clone https://github.com/iChenLei/weex-android-joke.git
+```git 
+	clone https://github.com/iChenLei/weex-android-joke.git
 ```
 ### License
 [MIT](http://opensource.org/licenses/MIT)
