@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">笑话部落格</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="splash">首页</string>
+    <string name="baozou">暴走漫画</string>
+    <string name="neihan">内涵社区</string>
+    <string name="baisi">百思不得其姐</string>
+    <string name="pengfu">捧腹网</string>
+    <string name="qiubai">糗事百科</string>
+    <string name="laifudao">来福岛</string>
+    <string name="kuailemahua">快乐麻花</string>
+    <string name="myjoke">我的笑话社区</string>
+</resources>

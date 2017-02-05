@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:src="@drawable/xiaohua"
+                android:id="@+id/xiaohua"
+                android:scaleType="fitXY"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:src="@drawable/baozou"
+                android:id="@+id/baozou"
+                android:layout_margin="0dp"
+                android:scaleType="fitXY"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:src="@drawable/neihan"
+                android:id="@+id/neihan"
+                android:layout_margin="0dp"
+                android:scaleType="fitXY"/>
+
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:src="@drawable/pengfu"
+                android:id="@+id/pengfu"
+                android:scaleType="fitXY"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:src="@drawable/kuailemahua"
+            android:id="@+id/kuailemahua"
+            android:scaleType="fitXY"/>
+
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:src="@drawable/qiubai"
+                android:id="@+id/qiubai"
+                android:scaleType="fitXY"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:src="@drawable/baisijie"
+            android:id="@+id/baisijie"
+            android:scaleType="fitXY"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:src="@drawable/laifudao"
+            android:id="@+id/laifudao"
+            android:scaleType="fitXY"/>
+
+    </LinearLayout>
+
+</ScrollView>
