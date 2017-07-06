@@ -47,5 +47,4 @@ public class ImageAdapter implements IWXImgLoaderAdapter
 	git clone https://github.com/iChenLei/weex-android-joke.git
 ```
 ### License
-[MIT](http://opensource.org/licenses/MIT)
-Copyright (c) 2017-present, ChenLei
+[MIT](http://opensource.org/licenses/MIT) Copyright (c) 2017-present, @ChenLei
