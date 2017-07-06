@@ -1,14 +1,15 @@
 ﻿<p align="center"><img src="http://i1.piimg.com/567571/002efebc87d32ed1.png"></p>
 <p align="center"><img src="https://img.shields.io/badge/build-failing-red.svg?style=flat-square">  <img src="https://img.shields.io/badge/Platform-Android-green.svg?style=flat-square">  <img src="https://img.shields.io/badge/sdk--version-0.8.0-red.svg?style=flat-square">  <img src="https://img.shields.io/badge/language-Js&Java-green.svg?style=flat-square">   <img src="https://img.shields.io/badge/weexfile-.we-green.svg?style=flat-square">  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=flat-square"></p>
 ### 阿里巴巴weex校园开发大赛作品
-![](http://p1.bpimg.com/567571/033072ded53b7f0e.png)
->该图片来自比赛答辩PPT的展示页
+
+
+>该app获得比赛第二名
 
 ### weex开发流程
 1.打开Android Studio，初始化一个项目
 2.配置好gradle，安装好weex-sdk(我用的是v0.8.0版本)
 ```gradle
-	compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.alibaba:fastjson:1.1.45'
     compile 'com.taobao.android:weex_sdk:0.8.0@aar'
